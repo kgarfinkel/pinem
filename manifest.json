@@ -1,0 +1,29 @@
+{
+  "manifest_version" : 2,
+
+  "name" : "Pin 'em",
+  "description" : "Pin multiple images to different Pinterest boards in just two clicks",
+  "version" : "1.1",
+
+  "permissions" : [
+     "tabs", 
+     "<all_urls>"
+  ],
+
+  "browser_action" : {
+    "default_icon" : "images/icon.png"
+  },
+
+  "background" : {
+      "page" : "background.html",
+      "persistent" : false
+    },
+
+  "content_scripts" : [
+  {
+    "matches" : ["<all_urls>"],
+    "js" : ["lib/jquery.min.js", "src/contentScript.js"],
+    "css" : ["stylesheets/style.css"]
+    }
+  ]
+}
