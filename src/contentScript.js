@@ -48,8 +48,8 @@ function appendImages() {
   });  
 };
 
-function sendMess() {
-  chrome.extension.sendMessage({action : 'redirectImages'}, function(response) {
+function sendMess(images) {
+  chrome.extension.sendMessage({action : 'redirectImages', images : images}, function(response) {
     success = response.received;
     console.log(success);
   });
@@ -69,11 +69,12 @@ $(document).on('click', '#submit-images', function(e) {
   });
 
   console.log(cache);
-  sendMess();
+  sendMess(cache);
 });
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) { 
   if (request === "displayImages") {
+    console.log('displayImages message received')
     appendImages();
   }
 }); 

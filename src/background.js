@@ -7,13 +7,16 @@ chrome.browserAction.onClicked.addListener(function() {
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === 'redirectImages') {
+    console.log(request.images);
     sendResponse({received : 'success'});
-    injectScript();  
+    injectScript(request.images);  
   }
 });
 
-function injectScript() {
+function injectScript(images) {
   chrome.tabs.create({url : 'http://pinterest.com/pin/create/bookmarklet/'}, function(tab) { 
-    chrome.tabs.executeScript(tab.id, {file: 'src/BoardScript.js'});
+    chrome.tabs.executeScript(tab.id, {file: 'src/BoardScript.js'}, function() {
+      chrome.tabs.sendMessage(tab.id, {action: 'sendImages', images: images});
+    });
   });
 };
