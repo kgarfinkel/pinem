@@ -25,29 +25,33 @@ function findAttribute(elem, attr) {
   return placeHolder;
 };
 
-function appendImages() {
-  var placeHolder = findAttribute('img', 'src'),
-  highestZ = getZIndex() + 1,
-  docHeight = $(document).height(),
-  pinemoverlay = $('<div id="pinemoverlay"/>'),
-  topbar = $('<div id="pinemtopbar"><h1>Pinem</h1><button id="submit-images">submit</button></div>'); 
+//find all pinemImage sources in the current page and store them into an array
+//iterate through the stored images and display each pinemImage by appending them as an overlay
+//of the current tab
+function displayImages() {
+  var imgSources = findAttribute('img', 'src'),
+      highestZ = getZIndex() + 1,
+      docHeight = $(document).height(),
+      pinemOverlay = $('<div id="pinemOverlay"/>'),
+      pinemTopBar = $('<div id="pinemTopBar"><h1>Pinem</h1><button id="submit-images">submit</button></div>'); 
 
-  $('body').append(pinemoverlay);
-  $(pinemoverlay).append(topbar);
-  pinemoverlay.css({
+  $('body').append(pinemOverlay);
+  $(pinemOverlay).append(pinemTopBar);
+  pinemOverlay.css({
     height : docHeight + 'px' ,
     'z-index': highestZ
   });
 
-  $(placeHolder).each(function(index) {
-    var pinemcontainer = $('<div class="pinemcontainer"/>'),
-        pinemimage = $('<img class="pinemimage" src=' + placeHolder[index].toString()  + '>');
+  $(imgSources).each(function(index) {
+    var pinemImageContainer = $('<div class="pinemImageContainer"/>'),
+        pinemImage = $('<img class="pinemImage" src=' + imgSources[index].toString()  + '>');
     
-    pinemoverlay.append(pinemcontainer);
-    pinemcontainer.append(pinemimage);
+    pinemOverlay.append(pinemImageContainer);
+    pinemImageContainer.append(pinemImage);
   });  
 };
 
+//Chrome messanger function that sends a message to the extension's background page
 function sendMess(images) {
   chrome.extension.sendMessage({action : 'redirectImages', images : images}, function(response) {
     success = response.received;
@@ -55,27 +59,30 @@ function sendMess(images) {
   });
 };
 
-$(document).on('click','.pinemimage', function(e) {
-    e.preventDefault();
-    $(this).data('select', true); 
-});
-
-$(document).on('click', '#submit-images', function(e) {
-  e.preventDefault();
-  var cache = [];
-
-  $('.pinemimage').each(function() {
-    $(this).data('select') ? cache.push(this.src) : false;
+function selectImageEvents() { 
+  $(document).on('click','.pinemImage', function(e) {
+      e.preventDefault();
+      $(this).data('select', true); 
   });
 
-  console.log(cache);
-  sendMess(cache);
-});
+  $(document).on('click', '#submit-images', function(e) {
+    e.preventDefault();
+    var cache = [];
+
+    $('.pinemImage').each(function() {
+      $(this).data('select') ? cache.push(this.src) : false;
+    });
+
+    console.log(cache);
+    sendMess(cache);
+  });
+};
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) { 
   if (request === "displayImages") {
     console.log('displayImages message received')
-    appendImages();
+    displayImages();
+    selectImageEvents();
   }
 }); 
 

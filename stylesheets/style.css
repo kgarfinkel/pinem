@@ -1,5 +1,5 @@
 
-#pinemoverlay {
+#pinemOverlay, #boardOverlay {
   width : 100% !important;
   position : absolute !important;
   top : 0 !important;
@@ -9,7 +9,7 @@
   text-align: center !important;
 }
 
-#pinemtopbar {
+#pinemTopBar {
   width: 100%;
   text-align: center !important;
   height: 50px !important;
@@ -24,7 +24,7 @@
   text-align: right;
 }
 
-.pinemcontainer { 
+.pinemImageContainer, #boardContainer { 
   -moz-box-shadow: 0 0 2px #555!important;
   -webkit-box-shadow: 0 0 2px #555!important;
   box-shadow: 0 0 2px #555!important;
@@ -34,11 +34,11 @@
   margin: 10px !important;
   display: inline-block!important
 }
-.pinemimage { 
+.pinemImage, #selectedImage { 
   cursor: pointer !important;
   height : 200px !important;
   width : 200px !important;
 }
 
-.pinemcontainer:hover {
+.pinemImageContainer:hover {
 }

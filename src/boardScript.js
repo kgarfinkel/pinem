@@ -1,7 +1,10 @@
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   console.log('message from background.js received')
   if(request.action === 'sendImages') {
-    cache = request.images;
+    images = request.images;    
+    setUp();
+    setUpOverlay();
+    setUpEvents();
   }
 });
 
@@ -21,21 +24,29 @@ function setUp() {
   });
 };
 
-function appendBoards() {
-  var overlay = $('<div id="boardoverlay"/>'),
-      container = $('<div id="boardcontainer"><button id="test"></div>'),
+function setUpOverlay() {
+  var overlay = $('<div id="boardOverlay"/>'),
+      container = $('<div id="boardContainer"><button id="test"></div>'),
       unordered = $('<ul id="unordered"/>'),
       boards = $('.boardPickerItem');
-
-
+      
   overlay.css({
-    'z-index' : 10000000
+    'z-index' : 10000000, 
+    //height : $(document).height() + 'px'
   });
 
   $('body').append(overlay);
   overlay.append(container);
-  container.append(unordered)
+  container.append(unordered);
   unordered.append(boards);
+
+    $(images).each(function(index) {
+      var imagesContainer = $('<div class="imagesContainer"/>'),
+          selectedImage = $('<img class="selectedImage" src=' + images[index].toString()  + '>');
+      
+      overlay.append(imagesContainer);
+      imagesContainer.append(selectedImage);
+    });  
 };
 
 function postCreate(boardID) {
@@ -56,7 +67,7 @@ function setUpEvents() {
     e.preventDefault();
 
     $(this).data('select', true); 
-    console.log('selected: ' + this);
+    console.log(this);
   });
 
   $('#test').click(function(e) {
@@ -66,12 +77,8 @@ function setUpEvents() {
      if ($(this).data('select')) { 
        var boardID = $(this).attr('data-id');
        postCreate(boardID);
+       console.log('post request made');
      } 
     });
   });
 };
-
-
-setUp();
-appendBoards();
-setUpEvents();
