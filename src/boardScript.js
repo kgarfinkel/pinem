@@ -1,7 +1,7 @@
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   console.log('message from background.js received')
   if(request.action === 'sendImages') {
-     console.log(request.images);   
+    cache = request.images;
   }
 });
 
@@ -39,7 +39,7 @@ function appendBoards() {
 };
 
 function postCreate(boardID) {
-  var data = '{"options":{"board_id":"' + boardID + '","description":"italy 1970","link":"http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri","image_url":"http://25.media.tumblr.com/58b6bdf54e8b52352676bab6b317d4f3/tumblr_mneoh3IGsg1qm6qwdo2_r1_1280.png","method":"scraped"},"context":{"app_version":"b80ee78"}}';
+  var data = '{"options":{"board_id":"' + boardID + '","description":"","link":"http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri","image_url":"http://25.media.tumblr.com/58b6bdf54e8b52352676bab6b317d4f3/tumblr_mneoh3IGsg1qm6qwdo2_r1_1280.png","method":"scraped"},"context":{"app_version":"b80ee78"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
