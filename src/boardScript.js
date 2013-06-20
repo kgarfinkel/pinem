@@ -25,10 +25,10 @@ function setUp() {
 };
 
 function setUpOverlay() {
-  var overlay = $('<div id="boardOverlay"/>'),
+  var overlay = $('<div id="boardOverlay"/>');
       container = $('<div id="boardContainer"><button id="test"></div>'),
-      unordered = $('<ul id="unordered"/>'),
-      boards = $('.boardPickerItem');
+      // unordered = $('<ul id="unordered"/>'),
+      // boards = $('.boardPickerItem');
       
   overlay.css({
     'z-index' : 10000000, 
@@ -37,15 +37,16 @@ function setUpOverlay() {
 
   $('body').append(overlay);
   overlay.append(container);
-  container.append(unordered);
-  unordered.append(boards);
+  // container.append(unordered);
+  // unordered.append(boards);
 
     $(images).each(function(index) {
       var imagesContainer = $('<div class="imagesContainer"/>'),
-          selectedImage = $('<img class="selectedImage" src=' + images[index].toString()  + '>');
+          selectedImage = $('<img class="selectedImage" src=' + images[index].toString()  + '>'),
+          pinBookmarklet = $('.mainContainer').children();
       
-      overlay.append(imagesContainer);
-      imagesContainer.append(selectedImage);
+      container.append((pinBookmarklet).clone(true));   
+      //set div of image to image source
     });  
 };
 

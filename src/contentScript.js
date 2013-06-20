@@ -1,5 +1,5 @@
-// return the highest z-index of the current page
-// may scratch for optimization  
+// Return the highest z-index of the current page
+// May scratch for optimization  
 function getZIndex (selector) {
   var selector = selector || '*',
       zHighest = 0, 
@@ -25,9 +25,8 @@ function findAttribute(elem, attr) {
   return placeHolder;
 };
 
-//find all pinemImage sources in the current page and store them into an array
-//iterate through the stored images and display each pinemImage by appending them as an overlay
-//of the current tab
+//Find all image sources on page and display each image by appending them as an overlay
+//onto the current tab
 function displayImages() {
   var imgSources = findAttribute('img', 'src'),
       highestZ = getZIndex() + 1,
@@ -51,7 +50,8 @@ function displayImages() {
   });  
 };
 
-//Chrome messanger function that sends a message to the extension's background page
+//Chrome messanger function to send a message (containing a string and image data) 
+//to the extension's background page
 function sendMess(images) {
   chrome.extension.sendMessage({action : 'redirectImages', images : images}, function(response) {
     success = response.received;
@@ -59,12 +59,16 @@ function sendMess(images) {
   });
 };
 
-function selectImageEvents() { 
+//Set up events for selecting image(s)
+function selectImages() { 
+  //When image is 'clicked', a data attr (select) is set to true
   $(document).on('click','.pinemImage', function(e) {
       e.preventDefault();
       $(this).data('select', true); 
   });
 
+  //When 'submit' button is clicked, store all images with true select attr
+  // into an array and send to boardScript.js via sendMess()
   $(document).on('click', '#submit-images', function(e) {
     e.preventDefault();
     var cache = [];
@@ -78,11 +82,13 @@ function selectImageEvents() {
   });
 };
 
+//Listen to message from background.js
+//When message received call setup functions
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) { 
   if (request === "displayImages") {
     console.log('displayImages message received')
     displayImages();
-    selectImageEvents();
+    selectImages();
   }
 }); 
 

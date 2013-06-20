@@ -1,9 +1,12 @@
+//when broswer icon is clicked background.js sends message to contentScript.js,
+//to initialize displaying all images on the active tab
 chrome.browserAction.onClicked.addListener(function() {
   chrome.tabs.getSelected(null, function(tab) {
     console.log('clicked')
-    chrome.tabs.sendMessage(tab.id, 'displayImages');
+    chrome.tabs.sendMessage(tab.id, 'displayImages' );
   });
 }); 
+
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === 'redirectImages') {
