@@ -26,32 +26,31 @@ function setUp() {
 
 function setUpOverlay() {
   var overlay = $('<div id="boardOverlay"/>');
-      container = $('<div id="boardContainer"><button id="test"></div>'),
-      // unordered = $('<ul id="unordered"/>'),
+      container = $('<div id="boardContainer"><button id="test"></div>');
       // boards = $('.boardPickerItem');
       
   overlay.css({
-    'z-index' : 10000000, 
-    //height : $(document).height() + 'px'
+    'z-index' : 10000000
   });
 
   $('body').append(overlay);
   overlay.append(container);
-  // container.append(unordered);
-  // unordered.append(boards);
+
 
     $(images).each(function(index) {
-      var imagesContainer = $('<div class="imagesContainer"/>'),
-          selectedImage = $('<img class="selectedImage" src=' + images[index].toString()  + '>'),
-          pinBookmarklet = $('.mainContainer').children();
-      
-      container.append((pinBookmarklet).clone(true));   
-      //set div of image to image source
+      var pinContainer = $('.mainContainer').children(),
+          boardId = "238831655177979124",
+          imageURL = this;
+      // console.log(this);
+      // console.log(images[index]);
+      $('.image.pinPreviewImg').attr('src', this);
+      container.append((pinContainer).clone(true)); 
+      postCreate(boardId, this);  
     });  
 };
 
-function postCreate(boardID) {
-  var data = '{"options":{"board_id":"' + boardID + '","description":"","link":"http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri","image_url":"http://25.media.tumblr.com/58b6bdf54e8b52352676bab6b317d4f3/tumblr_mneoh3IGsg1qm6qwdo2_r1_1280.png","method":"scraped"},"context":{"app_version":"b80ee78"}}';
+function postCreate(boardID, imageURL) {
+  var data = '{"options":{"board_id":"' + boardID + '","description":"","link":"http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri","image_url":"' + imageURL + '","method":"scraped"},"context":{"app_version":"b80ee78"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
