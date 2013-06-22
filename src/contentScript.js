@@ -25,28 +25,50 @@ function findAttribute(elem, attr) {
   return placeHolder;
 };
 
+var getImgSize = function(imgSrc) {
+  var newImg = {};
+
+  newImg.onload = function() {
+    var height = newImg.height,
+        width = newImg.width;
+
+    console.log(height + 'x' + width);
+  }
+  newImg.src = imgSrc;
+};
+
 //Find all image sources on page and display each image by appending them as an overlay
 //onto the current tab
 function displayImages() {
-  var imgSources = findAttribute('img', 'src'),
+  var images = document.images,
       highestZ = getZIndex() + 1,
       docHeight = $(document).height(),
       pinemOverlay = $('<div id="pinemOverlay"/>'),
-      pinemTopBar = $('<div id="pinemTopBar"><h1>Pinem</h1><button id="submit-images">submit</button></div>'); 
+      pinemTopBar = $('<div id="pinemTopBar"><h1>Pinem</h1><button id="submit-images">submit</button></div>');
+
 
   $('body').append(pinemOverlay);
   $(pinemOverlay).append(pinemTopBar);
+
   pinemOverlay.css({
     height : docHeight + 'px' ,
     'z-index': highestZ
   });
 
-  $(imgSources).each(function(index) {
+  $(images).each(function(i) {
+    var imgHref;
+    //var size = getImgSize(this)
     var pinemImageContainer = $('<div class="pinemImageContainer"/>'),
-        pinemImage = $('<img class="pinemImage" src=' + imgSources[index].toString()  + '>');
-    
+        imgSource = findAttribute(this, 'src'),
+        pinemImageImg = $('<img class="pinemImage" src=' + imgSource.toString()  + '>');
+        pinemImageData = $('<span class="pinemData"/>'),
+
+    this.parentNode.tagName.toLowerCase() === 'a' ? imgHref = this.parentNode.href : imgHref = window.location.href;
+    $('.pinemData').attr('imgHref', imgHref);
+
     pinemOverlay.append(pinemImageContainer);
-    pinemImageContainer.append(pinemImage);
+    pinemImageContainer.append(pinemImageData);
+    pinemImageData.append(pinemImageImg);
   });  
 };
 
@@ -70,14 +92,18 @@ function selectImages() {
   //When 'submit' button is clicked, store all images with true select attr
   // into an array and send to boardScript.js via sendMess()
   $(document).on('click', '#submit-images', function(e) {
-    e.preventDefault();
-    var cache = [];
+    e.preventDefault(); 
+    var imageData = {},
+        cache = [];
 
     $('.pinemImage').each(function() {
-      $(this).data('select') ? cache.push(this.src) : false;
+      if ($(this).data('select')) {
+        imageData['src'] = this.src;
+        imageData['href'] = $(this).parent().attr('imgHref');
+        cache.push(imageData);
+      } 
     });
 
-    console.log(cache);
     sendMess(cache);
   });
 };
