@@ -39,19 +39,18 @@ function setUpOverlay() {
 
   $(images).each(function(index) {
     var pinContainer = $('.mainContainer').children();
-
-    $('.pinPreviewImg').attr('src', images[index].src);
     container.append((pinContainer).clone(true));  
+    $('.pinPreviewImg').eq(index).attr('src', this.src);
   });  
 };
 
 function postCreate(boardId, imgURL, link) {
-  var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri","image_url":"' + imgURL + ',"method":"scraped"},"context":{"app_version":"b80ee78"}}';
+  var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + ',"method":"scraped"},"context":{"app_version":"b80ee78"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
     source_url : '/pin/find/?url=http%3A%2F%2Fwww.beautyisshe.com%2Fpost%2F51670826848%2Fitaly-ca-1970-photo-stanislao-farri',
-    module_path : 'App()>ImagesFeedPage(resource=FindPinImagesResource(url=http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri))>Grid()>GridItems()>Pinnable(url='+ imgURL + ', type=pinnable, link=http://www.beautyisshe.com/post/51670826848/italy-ca-1970-photo-stanislao-farri)#Modal(module=PinCreate())'
+    module_path : 'App()>ImagesFeedPage(resource=FindPinImagesResource(url=' + link + '))>Grid()>GridItems()>Pinnable(url='+ imgURL + ', type=pinnable, link=' + link + ')#Modal(module=PinCreate())'
     }, 
     function() {
     console.log('completed');
@@ -64,8 +63,9 @@ function setUpEvents() {
 
     $(images).each(function(index) {
       var boardId = "238831655177979124",
-          imgURL = images[index].src;
-        postCreate(boardId,imgURL); 
+          imgURL = this.src,
+          link = this.href;
+        postCreate(boardId,imgURL,link); 
 
     });  
   });

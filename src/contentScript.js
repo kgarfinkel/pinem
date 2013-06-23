@@ -25,23 +25,29 @@ function findAttribute(elem, attr) {
   return placeHolder;
 };
 
-var getImgSize = function(imgSrc) {
-  var newImg = {};
+function getImgSize(imgURL, callback) {
+  var img = new Image(),
+      dimensions = {};
 
-  newImg.onload = function() {
-    var height = newImg.height,
-        width = newImg.width;
+  $(img).attr('src', imgURL).load(function() {
+    dimensions['w'] = this.width;
+    dimensions['h'] = this.height;
 
-    console.log(height + 'x' + width);
-  }
-  newImg.src = imgSrc;
+    if(callback) callback(dimensions);
+  });
+};
+
+function displayImgSize(imgURL, callback) {
+  getImgSize(imgURL, function(t) {
+    var html = '<span class="imgSize">' + t.h + 'x' + t.w + '<span/>';
+    callback(html);
+  });
 };
 
 //Find all image sources on page and display each image by appending them as an overlay
 //onto the current tab
-function displayImages() {
-  var images = document.images,
-      highestZ = getZIndex() + 1,
+function appendOverlay() {
+  var highestZ = getZIndex() + 1,
       docHeight = $(document).height(),
       pinemOverlay = $('<div id="pinemOverlay"/>'),
       pinemTopBar = $('<div id="pinemTopBar"><h1>Pinem</h1><button id="submit-images">submit</button></div>');
@@ -54,19 +60,25 @@ function displayImages() {
     height : docHeight + 'px' ,
     'z-index': highestZ
   });
+};
+
+function displayImages() {
+  var images = document.images;
 
   $(images).each(function(i) {
     var imgHref;
-    //var size = getImgSize(this)
     var pinemImageContainer = $('<div class="pinemImageContainer"/>'),
         imgSource = findAttribute(this, 'src'),
         pinemImageImg = $('<img class="pinemImage" src=' + imgSource.toString()  + '>');
-        pinemImageData = $('<span class="pinemData"/>'),
+        pinemImageData = $('<span class="pinemData"/>');
+    // disImgSize = displayImgSize(this.src, function(sizeHTML) {
+    //   return sizeHTML;
+    // });
 
-    this.parentNode.tagName.toLowerCase() === 'a' ? imgHref = this.parentNode.href : imgHref = window.location.href;
+    $(this).parent().prop('tagName') === 'A' ? imgHref = $(this).parent().href : imgHref = window.location.href;
     $('.pinemData').attr('imgHref', imgHref);
 
-    pinemOverlay.append(pinemImageContainer);
+    $('#pinemOverlay').append(pinemImageContainer);
     pinemImageContainer.append(pinemImageData);
     pinemImageData.append(pinemImageImg);
   });  
@@ -81,29 +93,31 @@ function sendMess(images) {
   });
 };
 
+function imageConstructor(src, href) {
+    this.src = src;
+    this.href = href;
+};
+
 //Set up events for selecting image(s)
 function selectImages() { 
-  //When image is 'clicked', a data attr (select) is set to true
   $(document).on('click','.pinemImage', function(e) {
       e.preventDefault();
       $(this).data('select', true); 
   });
 
-  //When 'submit' button is clicked, store all images with true select attr
-  // into an array and send to boardScript.js via sendMess()
   $(document).on('click', '#submit-images', function(e) {
     e.preventDefault(); 
-    var imageData = {},
-        cache = [];
+      var cache = [];
 
-    $('.pinemImage').each(function() {
+
+    $('.pinemImage').each(function(image) {
       if ($(this).data('select')) {
-        imageData['src'] = this.src;
-        imageData['href'] = $(this).parent().attr('imgHref');
-        cache.push(imageData);
+        var src = this.src;
+        var href = $(this).parent().attr('imgHref');
+        cache.push(new imageConstructor(src, href));
       } 
     });
-
+    console.log(cache);
     sendMess(cache);
   });
 };
@@ -112,11 +126,9 @@ function selectImages() {
 //When message received call setup functions
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) { 
   if (request === "displayImages") {
-    console.log('displayImages message received')
+    console.log('displayImages message received');
+    appendOverlay();
     displayImages();
     selectImages();
   }
 }); 
-
-
-  
