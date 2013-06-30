@@ -1,10 +1,11 @@
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   console.log('message from background.js received')
   if(request.action === 'sendImages') {
-    images = request.images;  
+    var images = request.images;
+    console.log(images);
     setUp();
-    setUpOverlay();
-    setUpEvents();
+    setUpOverlay(images);
+    setUppEvents(images);
   }
 });
 
@@ -24,9 +25,10 @@ function setUp() {
   });
 };
 
-function setUpOverlay() {
+function setUpOverlay(images) {
   var overlay = $('<div id="boardOverlay"/>');
-      container = $('<div id="boardContainer"><button id="test"></div>');
+    container = $('<div id="boardContainer"><button id="test"></div>'),
+    pinBookmarklet = $('.PinBookmarklet').eq(0);
       // boards = $('.boardPickerItem');
       
   overlay.css({
@@ -38,18 +40,20 @@ function setUpOverlay() {
 
 
   $(images).each(function(index) {
-    var pinContainer = $('.mainContainer').children();
-    container.append((pinContainer).clone(true));  
-    $('.pinPreviewImg').eq(index).attr('src', this.src);
+    var clone = pinBookmarklet.clone(true);
+
+    container.append(clone); 
+    $('.pinPreviewImg', clone).attr('src', this.src);
   });  
 };
 
-function postCreate(boardId, imgURL, link) {
+function postCreate(boardId, imgURL, link, description) {
+  //var description = input || '';
   var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + ',"method":"scraped"},"context":{"app_version":"b80ee78"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
-    source_url : '/pin/find/?url=http%3A%2F%2Fwww.beautyisshe.com%2Fpost%2F51670826848%2Fitaly-ca-1970-photo-stanislao-farri',
+    source_url : '/pin/find/?url=' + encodeURIComponent(link),
     module_path : 'App()>ImagesFeedPage(resource=FindPinImagesResource(url=' + link + '))>Grid()>GridItems()>Pinnable(url='+ imgURL + ', type=pinnable, link=' + link + ')#Modal(module=PinCreate())'
     }, 
     function() {
@@ -57,8 +61,9 @@ function postCreate(boardId, imgURL, link) {
   }, 'jsonp');
 };
 
-function setUpEvents() {
+function setUpEvents(images) {
   $('#test').click(function(e) {
+    console.log('post')
     e.preventDefault();
 
     $(images).each(function(index) {
@@ -66,6 +71,7 @@ function setUpEvents() {
           imgURL = this.src,
           link = this.href;
         postCreate(boardId,imgURL,link); 
+        console.log('post');
 
     });  
   });

@@ -22,7 +22,7 @@
 }
 
 #submit-images {
-  text-align: right;
+  display: block;
 }
 
 .pinemImageContainer { 
@@ -35,6 +35,10 @@
   margin: 10px !important;
   display: inline-block!important
 }
+/*
+.imgSize {
+  z-index: 10000000
+}*/
 
 .pinemImage, #selectedImage { 
   cursor: pointer !important;
