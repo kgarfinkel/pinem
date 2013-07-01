@@ -22,13 +22,12 @@ function getImgSize(imgURL, callback) {
   $(img).attr('src', imgURL);
 
   img.onload = function() {
-  dimensions['w'] = img.width;
-  dimensions['h'] = img.height;
+  dimensions.w = img.width;
+  dimensions.h = img.height;
 
   if (callback) callback(dimensions);
   };
 };
-
 
 //Find all image sources on page and display each image by appending them as an overlay
 //onto the current tab
@@ -61,7 +60,7 @@ function displayImages() {
     pinemImageContainer.append(pinemImageData);
     pinemImageData.append(pinemImageImg);
 
-    var displayImgSize = getImgSize(this.src, function(dimensions) { 
+    getImgSize(this.src, function(dimensions) { 
       var html = $('<span class = "imgSize">' + dimensions.w + 'x' + dimensions.h + '</span>');
 
       pinemImageContainer.append(html) 
@@ -93,7 +92,6 @@ function selectImages() {
   $(document).on('click', '#submit-images', function(e) {
     e.preventDefault(); 
       var cache = [];
-
 
     $('.pinemImage').each(function(image) {
       if ($(this).data('select')) {

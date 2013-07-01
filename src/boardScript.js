@@ -38,7 +38,6 @@ function setUpOverlay(images) {
   $('body').append(overlay);
   overlay.append(container);
 
-
   $(images).each(function(index) {
     var clone = pinBookmarklet.clone(true);
 
