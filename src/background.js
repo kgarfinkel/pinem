@@ -7,7 +7,6 @@ chrome.browserAction.onClicked.addListener(function() {
   });
 }); 
 
-
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === 'redirectImages') {
     console.log(request.images);
