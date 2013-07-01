@@ -49,7 +49,7 @@ function appendOverlay() {
 function displayImages() {
   var images = $('img');
  
-  $(images).each(function(i) {
+  $(images).each(function(image) {
     var pinemImageContainer = $('<div class="pinemImageContainer"/>'),
       pinemImageImg = $('<img class="pinemImage" src=' + this.src  + '>'),
       pinemImageData = $('<span class="pinemData"/>');
@@ -96,7 +96,7 @@ function selectImages() {
     $('.pinemImage').each(function(image) {
       if ($(this).data('select')) {
         var src = this.src;
-        var href = $(this).parent().attr('imgHref');
+        var href = $(this).attr('imgHref');
         cache.push(new imageConstructor(src, href));
       } 
     });

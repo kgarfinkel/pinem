@@ -29,7 +29,7 @@ function setUpOverlay(images) {
   var overlay = $('<div id="boardOverlay"/>');
     container = $('<div id="boardContainer"><button id="test"></div>'),
     pinBookmarklet = $('.PinBookmarklet').eq(0);
-      // boards = $('.boardPickerItem');
+    // boards = $('.boardPickerItem');
       
   overlay.css({
     'z-index' : 10000000
@@ -38,7 +38,7 @@ function setUpOverlay(images) {
   $('body').append(overlay);
   overlay.append(container);
 
-  $(images).each(function(index) {
+  $(images).each(function(image) {
     var clone = pinBookmarklet.clone(true);
 
     container.append(clone); 
@@ -65,13 +65,11 @@ function setUpEvents(images) {
     console.log('post')
     e.preventDefault();
 
-    $(images).each(function(index) {
+    $(images).each(function(image) {
       var boardId = "238831655177979124",
           imgURL = this.src,
           link = this.href;
         postCreate(boardId,imgURL,link); 
-        console.log('post');
-
     });  
   });
 };
