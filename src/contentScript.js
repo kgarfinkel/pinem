@@ -78,8 +78,8 @@ function sendMess(images) {
 };
 
 function imageConstructor(src, href) {
-    this.src = src;
-    this.href = href;
+  this.src = src;
+  this.href = href;
 };
 
 //Set up events for selecting image(s)
@@ -96,7 +96,7 @@ function selectImages() {
     $('.pinemImage').each(function(image) {
       if ($(this).data('select')) {
         var src = this.src;
-        var href = $(this).attr('imgHref');
+          href = $(this).parent().attr('imgHref');
         cache.push(new imageConstructor(src, href));
       } 
     });
