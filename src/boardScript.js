@@ -47,7 +47,7 @@ function setUpOverlay(images) {
 };
 
 function postCreate(boardId, imgURL, link, description) {
-  //var description = input || '';
+  var description = input || '';
   var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
