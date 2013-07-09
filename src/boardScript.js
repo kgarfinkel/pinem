@@ -30,7 +30,6 @@ function setUpOverlay(images) {
   var overlay = $('<div id="boardOverlay"/>');
     container = $('<div id="boardContainer"><button id="test"></div>'),
     pinBookmarklet = $('.PinBookmarklet').eq(0);
-    // boards = $('.boardPickerItem');
       
   overlay.css({
     'z-index' : 10000000
