@@ -61,7 +61,7 @@ function displayImages() {
     pinemImageData.append(pinemImageImg);
 
     getImgSize(this.src, function(dimensions) { 
-      var html = $('<span class = "imgSize">' + dimensions.w + 'x' + dimensions.h + '</span>');
+      var html = $('<div class = "imgSize">' + dimensions.w + 'x' + dimensions.h + '</span>');
 
       pinemImageContainer.append(html) 
     });
@@ -100,6 +100,7 @@ function selectImages() {
         cache.push(new imageConstructor(src, href));
       } 
     });
+    
     console.log(cache);
     sendMess(cache);
   });

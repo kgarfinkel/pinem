@@ -64,6 +64,18 @@ function selectBoard() {
   $('.boardPickerOuter').on('click', function() {
    $('.boardPickerInnerWrapper').addClass('visible')
   });
+
+  getBoardId()
+};
+
+var boardId = {};
+
+function getBoardId() {
+  $('.boardPickerItem').each(function() {
+    $(this).on('click', function() {
+      return boardId.id = ($(this).attr('data-id'));
+    });
+  });
 };
 
 function setUpEvents(images) {
@@ -71,11 +83,10 @@ function setUpEvents(images) {
     e.preventDefault();
 
     $(images).each(function(image) {
-      var boardId = "238831655177979124",
-        imgURL = this.src,
+        var imgURL = this.src,
         link = this.href;
       
-      postCreate(boardId, imgURL, link ); 
+      postCreate(boardId.id, imgURL, link ); 
     });  
   });
 }
