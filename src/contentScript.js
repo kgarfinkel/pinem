@@ -2,17 +2,17 @@
 // May scratch for optimization  
 function getZIndex (selector) {
   var selector = selector || '*',
-    zHighest = 0, 
-    zCurrent;
+  zHighest = 0, 
+  zCurrent;
 
   $(selector).each(function() {
-    if ($(this).css('z-index') != undefined) {
+    if ($(this).css('z-index') !== undefined) {
       zCurrent = parseInt($(this).css('z-index'), 10);
-      zCurrent > zHighest ? zHighest = zCurrent : zHighest = zHighest;
+      zHighest = zCurrent > zHighest ? zCurrent : zHighest;
     }
   });
 
- return zHighest;
+  return zHighest;
 };
 
 function getImgSize(imgURL, callback) {
@@ -22,10 +22,10 @@ function getImgSize(imgURL, callback) {
   $(img).attr('src', imgURL);
 
   img.onload = function() {
-  dimensions.w = img.width;
-  dimensions.h = img.height;
+    dimensions.w = img.width;
+    dimensions.h = img.height;
 
-  if (callback) callback(dimensions);
+    if (callback) callback(dimensions);
   };
 };
 
@@ -63,7 +63,7 @@ function displayImages() {
     getImgSize(this.src, function(dimensions) { 
       var html = $('<div class = "imgSize">' + dimensions.w + 'x' + dimensions.h + '</span>');
 
-      pinemImageContainer.append(html) 
+      pinemImageContainer.append(html); 
     });
   });   
 };
@@ -91,12 +91,13 @@ function selectImages() {
 
   $(document).on('click', '#submit-images', function(e) {
     e.preventDefault(); 
-      var cache = [];
+    var cache = [];
 
     $('.pinemImage').each(function(image) {
       if ($(this).data('select')) {
         var src = this.src;
-          href = $(this).parent().attr('imgHref');
+        
+        href = $(this).parent().attr('imgHref');
         cache.push(new imageConstructor(src, href));
       } 
     });

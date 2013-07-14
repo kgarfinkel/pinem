@@ -1,11 +1,11 @@
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log('message from background.js received')
+  console.log('message from background.js received');
   if(request.action === 'sendImages') {
     var images = request.images;
     console.log(images);
     setUp();
     setUpOverlay(images);
-    selectBoard();
+    selectBoard(images);
     setUpEvents(images);
   }
 });
@@ -27,7 +27,7 @@ function setUp() {
 };
 
 function setUpOverlay(images) {
-  var overlay = $('<div id="boardOverlay"/>');
+  var overlay = $('<div id="boardOverlay"/>'),
     container = $('<div id="boardContainer"><button id="test"></div>'),
     pinBookmarklet = $('.PinBookmarklet').eq(0);
       
@@ -47,8 +47,8 @@ function setUpOverlay(images) {
 };
 
 function postCreate(boardId, imgURL, link, description) {
-  //var description = input || '',
-    data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
+  //var description = input || '';
+  var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
@@ -60,20 +60,46 @@ function postCreate(boardId, imgURL, link, description) {
   });
 };
 
-function selectBoard() {
-  $('.boardPickerOuter').on('click', function() {
-   $('.boardPickerInnerWrapper').addClass('visible')
+function selectBoard(images) {
+  $('.BoardPicker').on('click', function(e) {
+    e.stopPropagation();
+    $('.boardPickerInnerWrapper').removeClass('visible');
+    $('.boardPickerInnerWrapper', $(this)).addClass('visible');
   });
 
-  getBoardId()
-};
+  $('.boardPickerInnerWrapper.visible').on('click', function(e) {
+    e.stopPropagation();
+  });
 
-var boardId = {};
+  $(document).on('click', function() {
+    $('.boardPickerInnerWrapper.visible').removeClass('visible');
+  });
 
-function getBoardId() {
   $('.boardPickerItem').each(function() {
     $(this).on('click', function() {
-      return boardId.id = ($(this).attr('data-id'));
+      // set data-id to var
+      // traverse up DOM to find closests standardForm
+      // find img associated with that standardForm
+      // set img to var
+      // loop through images
+      // check each item in images src properties, to see if
+      // it matches img
+      // add data-id as property to current obj
+
+      var boardID = $(this).attr('data-id'), 
+        standardForm = $(this).parents('.standardForm:first'),
+        img = $('.pinPreviewImg', standardForm);
+
+      $(images).each(function(key, obj) {
+        console.log('--')
+        console.log(obj);
+        console.log(obj.src);
+        console.log(img.attr('src'));
+        console.log('--')
+        if (obj.src === img.attr('src')) {
+          obj.boardID = boardID;
+        }
+      })
     });
   });
 };
@@ -83,10 +109,12 @@ function setUpEvents(images) {
     e.preventDefault();
 
     $(images).each(function(image) {
-        var imgURL = this.src,
-        link = this.href;
-      
-      postCreate(boardId.id, imgURL, link ); 
+      console.log(this);
+      console.log(this.boardID)
+      var imgURL = this.src,
+      link = this.href;
+      boardId = this.boardID
+      postCreate(boardId, imgURL, link ); 
     });  
   });
 }
