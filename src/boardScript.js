@@ -16,7 +16,7 @@ Cookie = {
   }
 };
 
-function setUp() {
+var setUp = function() {
   var csrft = Cookie.get("csrftoken").toString();
 
   $.ajaxSetup({
@@ -26,7 +26,7 @@ function setUp() {
   });
 };
 
-function setUpOverlay(images) {
+var setUpOverlay = function(images) {
   var overlay = $('<div id="boardOverlay"/>'),
     container = $('<div id="boardContainer"><button id="test"></div>'),
     pinBookmarklet = $('.PinBookmarklet').eq(0);
@@ -46,7 +46,7 @@ function setUpOverlay(images) {
   });  
 };
 
-function postCreate(boardId, imgURL, link, description) {
+var postCreate = function(boardId, imgURL, link, description) {
   //var description = input || '';
   var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
 
@@ -60,7 +60,7 @@ function postCreate(boardId, imgURL, link, description) {
   });
 };
 
-function selectBoard(images) {
+var selectBoard = function(images) {
   $('.BoardPicker').on('click', function(e) {
     e.stopPropagation();
     $('.boardPickerInnerWrapper').removeClass('visible');
@@ -82,6 +82,9 @@ function selectBoard(images) {
         standardForm = $(this).parents('.standardForm:first'),
         img = $('.pinPreviewImg', standardForm);
 
+      $('.currentBoardName').html(this.textContent);
+
+
       $(images).each(function(key, obj) {
         if (obj.src === img.attr('src')) {
           obj.boardID = boardID;
@@ -91,7 +94,7 @@ function selectBoard(images) {
   });
 };
 
-function setUpEvents(images) {
+var setUpEvents = function (images) {
   $('#test').on('click',function(e) {
     e.preventDefault();
 
