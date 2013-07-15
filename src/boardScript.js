@@ -77,29 +77,16 @@ function selectBoard(images) {
 
   $('.boardPickerItem').each(function() {
     $(this).on('click', function() {
-      // set data-id to var
-      // traverse up DOM to find closests standardForm
-      // find img associated with that standardForm
-      // set img to var
-      // loop through images
-      // check each item in images src properties, to see if
-      // it matches img
-      // add data-id as property to current obj
 
       var boardID = $(this).attr('data-id'), 
         standardForm = $(this).parents('.standardForm:first'),
         img = $('.pinPreviewImg', standardForm);
 
       $(images).each(function(key, obj) {
-        console.log('--')
-        console.log(obj);
-        console.log(obj.src);
-        console.log(img.attr('src'));
-        console.log('--')
         if (obj.src === img.attr('src')) {
           obj.boardID = boardID;
         }
-      })
+      });
     });
   });
 };
@@ -109,11 +96,9 @@ function setUpEvents(images) {
     e.preventDefault();
 
     $(images).each(function(image) {
-      console.log(this);
-      console.log(this.boardID)
       var imgURL = this.src,
       link = this.href;
-      boardId = this.boardID
+      boardId = this.boardID;
       postCreate(boardId, imgURL, link ); 
     });  
   });
