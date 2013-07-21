@@ -40,6 +40,7 @@ var setUpOverlay = function(images) {
 
   $(images).each(function(image) {
     var clone = pinBookmarklet.clone(true);
+    $('.formFooter').remove();
 
     container.append(clone); 
     $('.pinPreviewImg', clone).attr('src', this.src);
@@ -77,12 +78,14 @@ var selectBoard = function(images) {
 
   $('.boardPickerItem').each(function() {
     $(this).on('click', function() {
+      $(this).addClass('active');
 
       var boardID = $(this).attr('data-id'), 
         standardForm = $(this).parents('.standardForm:first'),
         img = $('.pinPreviewImg', standardForm);
 
-      $('.currentBoardName').html(this.textContent);
+      //fix bug here  
+      //$('.currentBoardName').html(this.textContent);
 
 
       $(images).each(function(key, obj) {
