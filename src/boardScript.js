@@ -84,10 +84,7 @@ var selectBoard = function(images) {
         standardForm = $(this).parents('.standardForm:first'),
         img = $('.pinPreviewImg', standardForm);
 
-      //fix bug here  
-      //$('.currentBoardName').html(this.textContent);
-
-
+      $('.currentBoardName', standardForm).text($(this).text());
       $(images).each(function(key, obj) {
         if (obj.src === img.attr('src')) {
           obj.boardID = boardID;
