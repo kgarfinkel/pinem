@@ -50,8 +50,8 @@ var setUpOverlay = function(images) {
 };
 
 var postCreate = function(boardId, imgURL, link, description) {
-  var description = description || '',
-    data = '{"options":{"board_id":"' + boardId + '","description":"' + description + '","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
+  description = description || '';
+  var data = '{"options":{"board_id":"' + boardId + '","description":"' + description + '","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
@@ -118,7 +118,7 @@ var setUpEvents = function (images) {
     $(images).each(function(key, image) {
       var imgURL = this.src,
       link = this.href;
-      boardId = this.boardID,
+      boardId = this.boardID || $('.boardPickerItem').attr('data-id'),
       descript = this.descript;
       postCreate(boardId, imgURL, link, descript); 
     });  
