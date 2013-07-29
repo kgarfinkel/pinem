@@ -30,7 +30,9 @@ var setUpOverlay = function(images) {
   var overlay = $('<div id="boardOverlay"/>'),
     container = $('<div id="boardContainer"><button id="test"></div>'),
     pinBookmarklet = $('.PinBookmarklet').eq(0);
-      
+
+  $('.formFooter').remove();
+
   overlay.css({
     'z-index' : 10000000
   });
@@ -40,16 +42,16 @@ var setUpOverlay = function(images) {
 
   $(images).each(function(image) {
     var clone = pinBookmarklet.clone(true);
-    $('.formFooter').remove();
 
     container.append(clone); 
     $('.pinPreviewImg', clone).attr('src', this.src);
+    $('#pinFormDescription', clone).addClass('pinFormDescription');
   });  
 };
 
 var postCreate = function(boardId, imgURL, link, description) {
-  //var description = input || '';
-  var data = '{"options":{"board_id":"' + boardId + '","description":"","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
+  var description = description || '',
+    data = '{"options":{"board_id":"' + boardId + '","description":"' + description + '","link":"' + link + '","image_url":"' + imgURL + '","method":"scraped"},"context":{"app_version":"5ad1cd"}}';
 
   $.post('//pinterest.com/resource/PinResource/create/',
     {data: data,
@@ -85,24 +87,40 @@ var selectBoard = function(images) {
         img = $('.pinPreviewImg', standardForm);
 
       $('.currentBoardName', standardForm).text($(this).text());
-      $(images).each(function(key, obj) {
-        if (obj.src === img.attr('src')) {
-          obj.boardID = boardID;
+      $(images).each(function(key, image) {
+        if (image.src === img.attr('src')) {
+          image.boardID = boardID;
         }
       });
     });
   });
 };
 
+var description = function(images) {
+  $('#pinFormDescription').addClass('pinFormDescription');
+  $('.standardForm').each(function(key, el) {
+    var that = this;
+    $(images).each(function(key, image) {
+      var img = $('.pinPreviewImg', that);
+      if (img.attr('src') === image.src) {
+        image.descript = $('.pinFormDescription', that).val();
+      }
+    });
+  });
+
+};
+ 
 var setUpEvents = function (images) {
   $('#test').on('click',function(e) {
     e.preventDefault();
+    description(images);
 
-    $(images).each(function(image) {
+    $(images).each(function(key, image) {
       var imgURL = this.src,
       link = this.href;
-      boardId = this.boardID;
-      postCreate(boardId, imgURL, link ); 
+      boardId = this.boardID,
+      descript = this.descript;
+      postCreate(boardId, imgURL, link, descript); 
     });  
   });
 }
