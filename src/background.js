@@ -14,7 +14,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
-function injectScript(images) {
+var injectScript = function(images) {
   chrome.tabs.create({url : 'http://pinterest.com/pin/create/bookmarklet/'}, function(tab) { 
     chrome.tabs.executeScript(tab.id, {file: 'src/BoardScript.js'}, function() {
       chrome.tabs.sendMessage(tab.id, {action: 'sendImages', images: images});

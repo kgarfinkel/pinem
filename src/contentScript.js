@@ -1,6 +1,6 @@
 // Return the highest z-index of the current page
 // May scratch for optimization  
-function getZIndex (selector) {
+var getZIndex = function(selector) {
   var selector = selector || '*',
   zHighest = 0, 
   zCurrent;
@@ -15,7 +15,8 @@ function getZIndex (selector) {
   return zHighest;
 };
 
-function getImgSize(imgURL, callback) {
+//get and store size of original image
+var getImgSize = function(imgURL, callback) {
   var img = new Image(),
     dimensions = {};
 
@@ -29,9 +30,8 @@ function getImgSize(imgURL, callback) {
   };
 };
 
-//Find all image sources on page and display each image by appending them as an overlay
-//onto the current tab
-function appendOverlay() {
+//setup an overlay on current tab
+var appendOverlay = function() {
   var highestZ = getZIndex() + 1,
     docHeight = $(document).height(),
     pinemOverlay = $('<div id="pinemOverlay"/>'),
@@ -46,7 +46,8 @@ function appendOverlay() {
   });
 };
 
-function displayImages() {
+//Find all images on page and display on the current tab
+var displayImages = function() {
   var images = $('img');
  
   $(images).each(function(image) {
@@ -61,29 +62,28 @@ function displayImages() {
     pinemImageData.append(pinemImageImg);
 
     getImgSize(this.src, function(dimensions) { 
-      var html = $('<div class = "imgSize">' + dimensions.w + 'x' + dimensions.h + '</span>');
+      var html = $('<span class = "imgSize">' + dimensions.w + 'x' + dimensions.h + '</span>');
 
-      pinemImageContainer.append(html); 
+      pinemImageData.append(html); 
     });
   });   
 };
 
-//Chrome messanger function to send a message (containing a string and image data) 
-//to the extension's background page
-function sendMess(images) {
+//Chrome messanger function to send a message (containing image data) to the background page
+var sendMess = function(images) {
   chrome.extension.sendMessage({action : 'redirectImages', images : images}, function(response) {
     success = response.received;
     console.log(success);
   });
 };
 
-function imageConstructor(src, href) {
+var imageConstructor = function(src, href) {
   this.src = src;
   this.href = href;
 };
 
 //Set up events for selecting image(s)
-function selectImages() { 
+var selectImages = function() { 
   $(document).on('click','.pinemImage', function(e) {
       e.preventDefault();
       $(this).data('select', true); 
@@ -107,8 +107,7 @@ function selectImages() {
   });
 };
 
-//Listen to message from background.js
-//When message received call setup functions
+//When message received from background.jssetup functions
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) { 
   if (request === "displayImages") {
     console.log('displayImages message received');
